@@ -1,246 +1,638 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="theme-color" content="#0f172a"/>
-<title>HS English Quiz | Ulysses • Riders • Casuarina</title>
-<style>
-:root{--bg:#0f172a;--card:#1e293b;--accent:#38bdf8;--accent2:#a78bfa;--success:#4ade80;--danger:#f87171;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;--radius:16px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);color:var(--text);min-height:100vh;line-height:1.5}
-nav{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-.logo{font-weight:800;font-size:1.15rem;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:.4rem;flex-wrap:wrap}
-.nav-btn{background:transparent;border:1px solid transparent;color:var(--muted);padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-size:.9rem}
-.nav-btn:hover,.nav-btn.active{background:var(--card);color:var(--accent);border-color:var(--accent)}
-.hero{text-align:center;padding:3rem 1.5rem 2rem;max-width:720px;margin:0 auto}
-.hero h1{font-size:clamp(1.8rem,5vw,2.6rem);margin-bottom:.75rem;background:linear-gradient(90deg,#38bdf8,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--muted);margin-bottom:1.5rem}
-.mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:0 auto 2rem;padding:0 1rem}
-.mode-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;cursor:pointer;text-align:center;transition:transform .2s}
-.mode-card:hover{transform:translateY(-4px);border-color:var(--accent)}
-.mode-card h3{margin-bottom:.4rem;color:var(--accent)}
-.mode-card p{font-size:.9rem;color:var(--muted)}
-.container{max-width:780px;margin:0 auto;padding:1rem 1.25rem 4rem}
-.section-title{font-size:1.4rem;margin:1.5rem 0 1rem;display:flex;align-items:center;gap:.5rem}
-.badge{background:var(--accent2);color:#0f172a;font-size:.75rem;padding:.2rem .6rem;border-radius:999px;font-weight:700}
-.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.4rem;margin-bottom:1.25rem}
-.q-card.correct{border-color:var(--success)}
-.q-card.wrong{border-color:var(--danger)}
-.q-num{font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:.4rem}
-.q-text{font-size:1.05rem;margin-bottom:1rem}
-.options{display:flex;flex-direction:column;gap:.55rem}
-.opt{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:.7rem 1rem;cursor:pointer;display:flex;align-items:flex-start;gap:.6rem;text-align:left}
-.opt:hover:not(.disabled){border-color:var(--accent);background:#1e293b}
-.opt.selected{border-color:var(--accent);background:rgba(56,189,248,.12)}
-.opt.correct-ans{border-color:var(--success);background:rgba(74,222,128,.15)}
-.opt.wrong-ans{border-color:var(--danger);background:rgba(248,113,113,.12)}
-.opt.disabled{cursor:default;opacity:.85}
-.opt-letter{background:var(--border);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
-.opt.correct-ans .opt-letter{background:var(--success);color:#0f172a}
-.opt.wrong-ans .opt-letter{background:var(--danger);color:#0f172a}
-.feedback{margin-top:.9rem;padding:.75rem 1rem;border-radius:10px;font-size:.92rem;display:none}
-.feedback.show{display:block}
-.feedback.correct{background:rgba(74,222,128,.12);border:1px solid var(--success);color:#bbf7d0}
-.feedback.wrong{background:rgba(248,113,113,.12);border:1px solid var(--danger);color:#fecaca}
-.exam-bar{position:sticky;top:56px;z-index:90;background:rgba(30,41,59,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.6rem 1.25rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.exam-bar.active{display:flex}
-.timer{font-weight:700;font-size:1.1rem;color:var(--accent)}
-.score-pill{background:var(--card);padding:.3rem .8rem;border-radius:999px;font-size:.9rem}
-.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;padding:.65rem 1.4rem;border-radius:999px;font-weight:700;cursor:pointer;font-size:.95rem}
-.btn:hover{transform:scale(1.03)}
-.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
-.results{text-align:center;padding:2.5rem 1rem;display:none}
-.results.show{display:block}
-.results h2{font-size:1.8rem;margin-bottom:.5rem}
-.big-score{font-size:3.5rem;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
-.hidden{display:none!important}
-@media(max-width:600px){.nav-links{width:100%;justify-content:center}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="WBCHSE Class 12 English Quiz – Ulysses, Riders to the Sea, Our Casuarina Tree" />
+  <title>HS English Quiz | Ulysses • Riders • Casuarina</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-hover: #334155;
+      --accent: #38bdf8;
+      --accent2: #a78bfa;
+      --success: #4ade80;
+      --danger: #f87171;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #334155;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,23,42,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .logo {
+      font-weight: 800; font-size: 1.15rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .nav-btn {
+      background: transparent; border: 1px solid transparent;
+      color: var(--muted); padding: 0.45rem 0.9rem;
+      border-radius: 999px; cursor: pointer; font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--card); color: var(--accent);
+      border-color: var(--accent);
+    }
+    /* HERO / HOME */
+    .hero {
+      text-align: center; padding: 3rem 1.5rem 2rem;
+      max-width: 720px; margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      margin-bottom: 0.75rem;
+      background: linear-gradient(90deg, #38bdf8, #c084fc, #f472b6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--muted); margin-bottom: 1.5rem; }
+    .mode-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; max-width: 800px; margin: 0 auto 2rem; padding: 0 1rem;
+    }
+    .mode-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+      text-align: center;
+    }
+    .mode-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .mode-card h3 { margin-bottom: 0.4rem; color: var(--accent); }
+    .mode-card p { font-size: 0.9rem; color: var(--muted); }
+    /* QUIZ AREA */
+    .container { max-width: 780px; margin: 0 auto; padding: 1rem 1.25rem 4rem; }
+    .section-title {
+      font-size: 1.4rem; margin: 1.5rem 0 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .badge {
+      background: var(--accent2); color: #0f172a;
+      font-size: 0.75rem; padding: 0.2rem 0.6rem;
+      border-radius: 999px; font-weight: 700;
+    }
+    .q-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem 1.4rem;
+      margin-bottom: 1.25rem; box-shadow: var(--shadow);
+      transition: border-color 0.25s;
+    }
+    .q-card.correct { border-color: var(--success); }
+    .q-card.wrong { border-color: var(--danger); }
+    .q-num {
+      font-size: 0.8rem; color: var(--accent); font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .q-text { font-size: 1.05rem; margin-bottom: 1rem; }
+    .options { display: flex; flex-direction: column; gap: 0.55rem; }
+    .opt {
+      background: #0f172a; border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.7rem 1rem;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      text-align: left;
+    }
+    .opt:hover:not(.disabled) { border-color: var(--accent); background: #1e293b; }
+    .opt.selected { border-color: var(--accent); background: rgba(56,189,248,0.12); }
+    .opt.correct-ans { border-color: var(--success); background: rgba(74,222,128,0.15); }
+    .opt.wrong-ans { border-color: var(--danger); background: rgba(248,113,113,0.12); }
+    .opt.disabled { cursor: default; opacity: 0.85; }
+    .opt-letter {
+      background: var(--border); width: 26px; height: 26px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.8rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .opt.correct-ans .opt-letter { background: var(--success); color: #0f172a; }
+    .opt.wrong-ans .opt-letter { background: var(--danger); color: #0f172a; }
+    .feedback {
+      margin-top: 0.9rem; padding: 0.75rem 1rem;
+      border-radius: 10px; font-size: 0.92rem;
+      display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct { background: rgba(74,222,128,0.12); border: 1px solid var(--success); color: #bbf7d0; }
+    .feedback.wrong { background: rgba(248,113,113,0.12); border: 1px solid var(--danger); color: #fecaca; }
+    /* EXAM MODE BAR */
+    .exam-bar {
+      position: sticky; top: 56px; z-index: 90;
+      background: rgba(30,41,59,0.95); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      display: none; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .exam-bar.active { display: flex; }
+    .timer { font-weight: 700; font-size: 1.1rem; color: var(--accent); }
+    .score-pill {
+      background: var(--card); padding: 0.3rem 0.8rem;
+      border-radius: 999px; font-size: 0.9rem;
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0f172a; border: none; padding: 0.65rem 1.4rem;
+      border-radius: 999px; font-weight: 700; cursor: pointer;
+      font-size: 0.95rem; transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: scale(1.03); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    /* RESULTS */
+    .results {
+      text-align: center; padding: 2.5rem 1rem;
+      display: none;
+    }
+    .results.show { display: block; }
+    .results h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .big-score {
+      font-size: 3.5rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 1.5rem;
+      color: var(--muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    /* HIDDEN */
+    .hidden { display: none !important; }
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .nav-links { width: 100%; justify-content: center; }
+      .q-card { padding: 1rem; }
+    }
+  </style>
 </head>
 <body>
-<nav>
-  <div class="logo">📚 HS English Quiz</div>
-  <div class="nav-links">
-    <button class="nav-btn active" data-view="home">Home</button>
-    <button class="nav-btn" data-view="ulysses">Ulysses</button>
-    <button class="nav-btn" data-view="riders">Riders</button>
-    <button class="nav-btn" data-view="casuarina">Casuarina</button>
-    <button class="nav-btn" data-view="exam">Exam Mode</button>
+  <nav>
+    <div class="logo">📚 HS English Quiz</div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-view="home">Home</button>
+      <button class="nav-btn" data-view="ulysses">Ulysses</button>
+      <button class="nav-btn" data-view="riders">Riders to the Sea</button>
+      <button class="nav-btn" data-view="casuarina">Casuarina Tree</button>
+      <button class="nav-btn" data-view="exam">Exam Mode</button>
+    </div>
+  </nav>
+
+  <div id="examBar" class="exam-bar">
+    <div class="timer" id="timer">⏱ 20:00</div>
+    <div class="score-pill">Score: <span id="liveScore">0</span> / <span id="totalQ">0</span></div>
+    <button class="btn" id="submitExam">Submit Exam</button>
   </div>
-</nav>
-<div id="examBar" class="exam-bar">
-  <div class="timer" id="timer">⏱ 20:00</div>
-  <div class="score-pill">Score: <span id="liveScore">0</span> / <span id="totalQ">0</span></div>
-  <button class="btn" id="submitExam">Submit Exam</button>
-</div>
-<section id="view-home">
-  <div class="hero">
-    <h1>WBCHSE Class 12 English</h1>
-    <p>Interactive Quiz – Semester 3<br><strong>Ulysses</strong> • <strong>Riders to the Sea</strong> • <strong>Our Casuarina Tree</strong></p>
-  </div>
-  <div class="mode-cards">
-    <div class="mode-card" onclick="showView('ulysses')"><h3>🌊 Ulysses</h3><p>Tennyson – Practice with answers</p></div>
-    <div class="mode-card" onclick="showView('riders')"><h3>⛵ Riders to the Sea</h3><p>Synge – Characters & plot</p></div>
-    <div class="mode-card" onclick="showView('casuarina')"><h3>🌳 Casuarina Tree</h3><p>Toru Dutt – Imagery & symbols</p></div>
-    <div class="mode-card" onclick="startExam()"><h3>📝 Exam Mode</h3><p>Timed test • Score tracking</p></div>
-  </div>
-</section>
-<div class="container">
-  <section id="view-ulysses" class="hidden"><div class="section-title">🌊 Ulysses <span class="badge">Tennyson</span></div><div id="ulysses-qs"></div></section>
-  <section id="view-riders" class="hidden"><div class="section-title">⛵ Riders to the Sea <span class="badge">Synge</span></div><div id="riders-qs"></div></section>
-  <section id="view-casuarina" class="hidden"><div class="section-title">🌳 Our Casuarina Tree <span class="badge">Toru Dutt</span></div><div id="casuarina-qs"></div></section>
-  <section id="view-exam" class="hidden">
-    <div class="section-title">📝 Exam Mode</div>
-    <p style="color:var(--muted);margin-bottom:1rem">Answer all questions. Timer starts when you begin.</p>
-    <div id="exam-qs"></div>
-    <div style="text-align:center;margin-top:1.5rem"><button class="btn" id="startExamBtn" onclick="beginExam()">Start Exam (20 min)</button></div>
+
+  <!-- HOME -->
+  <section id="view-home">
+    <div class="hero">
+      <h1>WBCHSE Class 12 English</h1>
+      <p>Interactive Quiz for Semester 3<br>
+        <strong>Ulysses</strong> • <strong>Riders to the Sea</strong> • <strong>Our Casuarina Tree</strong></p>
+    </div>
+    <div class="mode-cards">
+      <div class="mode-card" onclick="showView('ulysses')">
+        <h3>🌊 Ulysses</h3>
+        <p>Tennyson – Dramatic Monologue<br>Practice with instant answers</p>
+      </div>
+      <div class="mode-card" onclick="showView('riders')">
+        <h3>⛵ Riders to the Sea</h3>
+        <p>J.M. Synge – One-Act Tragedy<br>Characters, symbols & plot</p>
+      </div>
+      <div class="mode-card" onclick="showView('casuarina')">
+        <h3>🌳 Our Casuarina Tree</h3>
+        <p>Toru Dutt – Ode to memory<br>Imagery & symbolism</p>
+      </div>
+      <div class="mode-card" onclick="startExam()">
+        <h3>📝 Exam Mode</h3>
+        <p>Timed test • Score tracking<br>No peeking until submit</p>
+      </div>
+    </div>
   </section>
-  <div id="results" class="results">
-    <h2>Exam Completed!</h2>
-    <div class="big-score" id="finalScore">0%</div>
-    <p id="scoreDetail" style="color:var(--muted);margin:.5rem 0 1.5rem"></p>
-    <button class="btn" onclick="showView('home')">Back to Home</button>
-    <button class="btn btn-outline" style="margin-left:.5rem" onclick="location.reload()">Retry</button>
+
+  <!-- QUIZ CONTAINERS -->
+  <div class="container">
+    <section id="view-ulysses" class="hidden">
+      <div class="section-title">🌊 Ulysses <span class="badge">Tennyson</span></div>
+      <div id="ulysses-qs"></div>
+    </section>
+
+    <section id="view-riders" class="hidden">
+      <div class="section-title">⛵ Riders to the Sea <span class="badge">Synge</span></div>
+      <div id="riders-qs"></div>
+    </section>
+
+    <section id="view-casuarina" class="hidden">
+      <div class="section-title">🌳 Our Casuarina Tree <span class="badge">Toru Dutt</span></div>
+      <div id="casuarina-qs"></div>
+    </section>
+
+    <section id="view-exam" class="hidden">
+      <div class="section-title">📝 Exam Mode</div>
+      <p style="color:var(--muted);margin-bottom:1rem;">Answer all questions. Timer starts when you begin. Answers are revealed only after submission.</p>
+      <div id="exam-qs"></div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button class="btn" id="startExamBtn" onclick="beginExam()">Start Exam (20 min)</button>
+      </div>
+    </section>
+
+    <div id="results" class="results">
+      <h2>Exam Completed!</h2>
+      <div class="big-score" id="finalScore">0%</div>
+      <p id="scoreDetail" style="color:var(--muted);margin:0.5rem 0 1.5rem;"></p>
+      <button class="btn" onclick="showView('home')">Back to Home</button>
+      <button class="btn btn-outline" style="margin-left:0.5rem;" onclick="location.reload()">Retry</button>
+    </div>
   </div>
-</div>
-<footer>Made for WBCHSE Class 12 • Practice + Exam Mode</footer>
-<script>
-const questions={
-ulysses:[
-{q:"What is the speaker in “Ulysses” longing for?",opts:["A peaceful and quiet retirement","New adventures and experiences","The comfort of his family","Forgiveness for past mistakes"],ans:1,exp:"Ulysses yearns for continuous exploration rather than idle kingship."},
-{q:"What phrase best reflects Ulysses’ restless spirit?",opts:["Grow old along with me","Much have I seen and known","I yearn for the old familiar ways","To strive, to seek, to find, and not to yield"],ans:3,exp:"The famous closing line shows his unyielding will."},
-{q:"“I cannot rest from travel: I will drink / Life to the lees” means—",opts:["He wants to retire","He wants to experience life fully till the end","He is tired of travelling","He wants to drink wine"],ans:1,exp:"‘Drink life to the lees’ = live life to the very last drop."},
-{q:"To whom does Ulysses want to leave the sceptre and the isle?",opts:["Penelope","Achilles","Telemachus","His mariners"],ans:2,exp:"He entrusts the kingdom to his capable son Telemachus."},
-{q:"Ulysses describes the people of Ithaca as a—",opts:["civilised race","savage race","heroic race","peaceful race"],ans:1,exp:"He calls them a ‘savage race’ that hoard, sleep and feed."},
-{q:"Ulysses compares himself to a sword that will—",opts:["shine forever","rust unburnish’d if left unused","cut through the sea","be given to Telemachus"],ans:1,exp:"He refuses to rust unused; he wants to remain active."},
-{q:"“I am a part of all that I have met” means—",opts:["He owns everything he saw","His experiences have shaped his identity","He has forgotten his past","He wants to meet more people"],ans:1,exp:"Every experience has contributed to who he is."},
-{q:"Telemachus is described as having—",opts:["adventurous spirit like his father","slow prudence","hatred for ruling","desire to sail with Ulysses"],ans:1,exp:"Ulysses praises his ‘slow prudence’."},
-{q:"Ulysses hopes they may reach the—",opts:["shores of Ithaca","Happy Isles","plains of Troy","city of Athens"],ans:1,exp:"He hopes to touch the Happy Isles and meet Achilles."},
-{q:"The sea in the poem primarily symbolises—",opts:["Fear of death","Barren life of Ithaca","Desire for adventure and the unknown","Telemachus’ duty"],ans:2,exp:"The sea represents the call of the unknown."},
-{q:"Assertion: Telemachus can civilise the rugged people. Reason: ?",opts:["Telemachus is as adventurous as his father","Telemachus has slow prudence","Telemachus has received knowledge from his father","Telemachus is very sharp-minded"],ans:1,exp:"Ulysses praises Telemachus’ ‘slow prudence’."},
-{q:"Assertion: Ulysses is eager to sail on a new journey. Reason: ?",opts:["He wants to meet his wife and son","He wants to go away from his son","He is bored with his life in Ithaca","He does not want to explore new lands"],ans:2,exp:"He finds idle kingship dull."},
-{q:"DIAGRAM: Center = ? Connected: passion for knowledge, love for adventure",opts:["People of Ithaca","Telemachus","Ulysses","Penelope"],ans:2,exp:"These are the defining traits of Ulysses."},
-{q:"DIAGRAM: Center = Ultimate strong will of Ulysses. Surrounding: To strive, To seek, To find, ?",opts:["Not to shine in use","To drink life to the lees","To sail beyond sunset","Not to yield"],ans:3,exp:"The line ends with ‘and not to yield’."},
-{q:"The place to which Telemachus, Ulysses and Penelope are connected is—",opts:["Athens","Ithaca","Troy","Italy"],ans:1,exp:"All three are linked to Ithaca."},
-{q:"Case: “To strive, to seek, to find, and not to yield” — What does he mean?",opts:["He refuses to return to the sea","He regrets not finding solace at home","He refuses to accept defeat and wants to live life to the fullest","He wants a simple life"],ans:2,exp:"Declaration of indomitable will."},
-{q:"Statement (I): Ulysses compares himself to a sword that will “rust unburnish’d”. Statement (II): He urges mariners to sail toward the rising sun.",opts:["Both true","I true, II false","I false, II true","Both false"],ans:1,exp:"I is true; II is false (he sails beyond the sunset)."},
-{q:"Pick the TRUE statement: (IV) Ulysses became tired of his life as an idle king",opts:["(I) never left Ithaca","(II) subjects were civilised","(III) Telemachus was hated","(IV) tired of idle king life"],ans:3,exp:"Only (IV) is true."}
-],
-riders:[
-{q:"In which year was ‘Riders to the Sea’ first staged?",opts:["1902","1904","1903","1910"],ans:1,exp:"First performed in 1904."},
-{q:"How many acts are there in the play?",opts:["4","3","1","2"],ans:2,exp:"One-act play."},
-{q:"Synge’s ‘Riders to the Sea’ is a one-act—",opts:["comedy","tragi-comedy","tragedy","farce"],ans:2,exp:"Tragedy."},
-{q:"The setting of the play is—",opts:["Donegal Islands","Aran Islands","Galway Islands","Connemara Islands"],ans:1,exp:"Aran Islands, west coast of Ireland."},
-{q:"What natural element heavily influences the family’s life?",opts:["Wind","Rain","Sea","Fire"],ans:2,exp:"The sea is both provider and destroyer."},
-{q:"Cathleen is a girl of about—",opts:["twenty-five years","nineteen years","twenty years","twenty-nine years"],ans:2,exp:"About twenty years old."},
-{q:"What is Cathleen doing at the beginning of the play?",opts:["Singing","Sewing","Reading","Kneading cake"],ans:3,exp:"Kneading cake."},
-{q:"Who gave the bundle of clothes to Nora?",opts:["A villager","Bartley","The young priest","Maurya"],ans:2,exp:"The young priest."},
-{q:"The bundle of clothes contained—",opts:["a coat and trousers","a shirt and a plain stocking","a hat and boots","a rosary and a bible"],ans:1,exp:"A shirt and a plain stocking."},
-{q:"Nora and Cathleen assumed Michael died by—",opts:["a gunshot","committing suicide","illness","drowning"],ans:3,exp:"Drowning."},
-{q:"The priest would not stop Bartley because—",opts:["he had faith in Bartley","he had no intention of saving him","he had faith that God is not so cruel to take Maurya’s last son","he didn’t want to get involved"],ans:2,exp:"Faith that God will not take the last son."},
-{q:"Bartley wants the rope for—",opts:["the coffin","a halter","the well","a noose"],ans:1,exp:"A halter for the red mare."},
-{q:"Which animal was chewing on the rope?",opts:["A sheep","A dog","A pig","A cat"],ans:2,exp:"A pig."},
-{q:"The fine white boards were bought from—",opts:["Galway","Dublin","Connemara","Donegal"],ans:2,exp:"Connemara."},
-{q:"They have been looking for Michael’s body for—",opts:["seven days","four days","nine days","ten days"],ans:2,exp:"Nine days."},
-{q:"Who wanted to go to the Galway fair?",opts:["Cathleen","Maurya","Bartley","Nora"],ans:2,exp:"Bartley."},
-{q:"According to Maurya the value of a son cannot be replaced by—",opts:["a hundred or a thousand horses","a herd of cattle","a bag of gold","a chest of treasure"],ans:0,exp:"A hundred or a thousand horses."}
-],
-casuarina:[
-{q:"Who is the author of ‘Our Casuarina Tree’?",opts:["Sarojini Naidu","Kamala Das","Toru Dutt","Rabindranath Tagore"],ans:2,exp:"Toru Dutt."},
-{q:"What is compared to a huge python?",opts:["The trunk of the tree","The creeper","The branches","The garden"],ans:1,exp:"The creeper winds like a huge python."},
-{q:"“Like a huge python…” is an example of—",opts:["Metaphor","Simile","Personification","Alliteration"],ans:1,exp:"Simile."},
-{q:"The trunk of the Casuarina tree is—",opts:["Smooth and tall","Thin and delicate","Rugged with deep scars","Covered with flowers"],ans:2,exp:"Rugged and indented deep with scars."},
-{q:"“Up to its summit near the stars” means—",opts:["The tree is very tall","The tree shines at night","The tree cannot be seen","It needs support"],ans:0,exp:"Emphasises the great height."},
-{q:"The tree wears the creeper like a—",opts:["Scarf","Shawl","Blanket","Rope"],ans:1,exp:"‘The giant wears the scarf’."},
-{q:"What hangs from the branches?",opts:["Fruits","Leaves","Crimson flowers","Monkeys"],ans:2,exp:"Crimson flowers."},
-{q:"The Casuarina tree mainly symbolises—",opts:["Nature’s cruelty","Childhood memories and loved ones","Supernatural power","Political freedom"],ans:1,exp:"Living link to childhood and lost siblings."},
-{q:"The poem is best described as an—",opts:["Sonnet","Ode","Elegy","Dramatic monologue"],ans:1,exp:"An ode."},
-{q:"‘Borrowdale’ refers to—",opts:["A place in India","A valley in England","A lake in Ireland","A city in France"],ans:1,exp:"Valley in the Lake District of England."},
-{q:"The ‘sweet companions’ are—",opts:["Birds and bees","Her siblings (Abju and Aru)","Village children","The grey baboon"],ans:1,exp:"Her brother and sister."},
-{q:"Toru Dutt was sometimes called the—",opts:["Indian Shelley","Indian Keats","Indian Wordsworth","Indian Byron"],ans:1,exp:"Indian Keats."}
-]
-};
-let currentView='home',examMode=false,examStarted=false,timerInterval=null,timeLeft=20*60,userAnswers={};
-function renderQuestions(topic,containerId,isExam=false){
-  const container=document.getElementById(containerId);container.innerHTML='';
-  questions[topic].forEach((item,idx)=>{
-    const qId=`${topic}-${idx}`;
-    const card=document.createElement('div');card.className='q-card';card.id=`card-${qId}`;
-    card.innerHTML=`<div class="q-num">Q${idx+1}</div><div class="q-text">${item.q.replace(/\n/g,'<br>')}</div><div class="options" id="opts-${qId}"></div><div class="feedback" id="fb-${qId}"></div>`;
-    container.appendChild(card);
-    const optsDiv=card.querySelector(`#opts-${qId}`);
-    item.opts.forEach((opt,oIdx)=>{
-      const btn=document.createElement('div');btn.className='opt';
-      btn.innerHTML=`<span class="opt-letter">${String.fromCharCode(65+oIdx)}</span><span>${opt}</span>`;
-      btn.onclick=()=>handleAnswer(topic,idx,oIdx,isExam);optsDiv.appendChild(btn);
+
+  <footer>
+    Made for WBCHSE Class 12 • Practice + Exam Mode • Offline ready<br>
+    Tap any option in Practice Mode to reveal the answer instantly.
+  </footer>
+
+  <script>
+    // ========== QUESTION BANK ==========
+    const questions = {
+      ulysses: [
+        // ===== Core & from earlier pages =====
+        { q: "What is the speaker in “Ulysses” longing for?", opts: ["A peaceful and quiet retirement", "New adventures and experiences", "The comfort of his family", "Forgiveness for past mistakes"], ans: 1, exp: "Ulysses yearns for continuous exploration rather than idle kingship." },
+        { q: "What phrase best reflects Ulysses’ restless spirit?", opts: ["Grow old along with me", "Much have I seen and known", "I yearn for the old familiar ways", "To strive, to seek, to find, and not to yield"], ans: 3, exp: "The famous closing line shows his unyielding will." },
+        { q: "“I cannot rest from travel: I will drink / Life to the lees” means—", opts: ["He wants to retire", "He wants to experience life fully till the end", "He is tired of travelling", "He wants to drink wine"], ans: 1, exp: "‘Drink life to the lees’ = live life to the very last drop." },
+        { q: "To whom does Ulysses want to leave the sceptre and the isle?", opts: ["Penelope", "Achilles", "Telemachus", "His mariners"], ans: 2, exp: "He entrusts the kingdom to his capable son Telemachus." },
+        { q: "Ulysses describes the people of Ithaca as a—", opts: ["civilised race", "savage race", "heroic race", "peaceful race"], ans: 1, exp: "He calls them a ‘savage race’ that hoard, sleep and feed." },
+        { q: "Ulysses compares himself to a sword that will—", opts: ["shine forever", "rust unburnish’d if left unused", "cut through the sea", "be given to Telemachus"], ans: 1, exp: "He refuses to rust unused; he wants to remain active." },
+        { q: "“I am a part of all that I have met” means—", opts: ["He owns everything he saw", "His experiences have shaped his identity", "He has forgotten his past", "He wants to meet more people"], ans: 1, exp: "Every experience has contributed to who he is." },
+        { q: "Telemachus is described as having—", opts: ["adventurous spirit like his father", "slow prudence", "hatred for ruling", "desire to sail with Ulysses"], ans: 1, exp: "Ulysses praises his ‘slow prudence’ and gentle ruling ability." },
+        { q: "Ulysses hopes they may reach the—", opts: ["shores of Ithaca", "Happy Isles", "plains of Troy", "city of Athens"], ans: 1, exp: "He hopes to touch the Happy Isles and meet Achilles." },
+        { q: "The sea in the poem primarily symbolises—", opts: ["Fear of death", "Barren life of Ithaca", "Desire for adventure and the unknown", "Telemachus’ duty"], ans: 2, exp: "The sea represents the call of the unknown and endless exploration." },
+        { q: "How does Ulysses view experience based on “whose margin fades for ever and forever when I move”?", opts: ["Experience is a limited collection of knowledge", "Experience constantly opens new possibilities and horizons", "Experience is something to be feared", "Experience makes life monotonous"], ans: 1, exp: "Every movement reveals more of the unknown; the margin keeps fading." },
+        { q: "What does “How dull it is to pause, to make an end” imply about life?", opts: ["Life should be static", "It is important to stop somewhere", "Life should be in constant motion", "Life is enjoyed most while resting"], ans: 2, exp: "Ulysses finds pausing and ending dull; he wants constant motion." },
+
+        // ===== Assertion-Reason (Pages 143+) =====
+        { q: "Assertion: He has always sought after knowledge with a hungry heart.\nReason: ?", opts: ["Ulysses has become a legend from a mere person", "Ulysses is the son of a great warrior", "Ulysses is a righteous king", "Ulysses has always wanted to become a legend"], ans: 0, exp: "His restless quest made him ‘a name’ / living legend." },
+        { q: "Assertion: Telemachus can civilise the rugged people.\nReason: ?", opts: ["Telemachus is as adventurous as his father", "Telemachus has slow prudence", "Telemachus has received the knowledge from his father", "Telemachus is very sharp-minded"], ans: 1, exp: "Ulysses praises Telemachus’ ‘slow prudence’ to make mild a rugged people." },
+        { q: "Assertion: Ulysses is eager to sail on a new journey.\nReason: ?", opts: ["He wants to meet his wife and son", "He wants to go away from his son whom he hates", "He is bored with his life in Ithaca", "He does not want to explore new lands"], ans: 2, exp: "He finds idle kingship dull and yearns for adventure." },
+        { q: "Ulysses wants to spend all his time looking for new adventures and learning new things because—", opts: ["he is forced by people of Ithaca to travel", "he believes adventures will make him immortal", "he wants to collect wealth and treasures from other lands", "he cannot rest from travel and wants to drink life to the lees"], ans: 3, exp: "The poem stresses his inability to rest and desire to live fully." },
+        { q: "Assertion: Ulysses expresses his gratefulness to his fellow mariners.\nReason: ?", opts: ["They obeyed him out of fear rather than loyalty", "They were forced to accompany him", "They have stood by him both in thunder and sunshine", "They entertained him during the journey"], ans: 2, exp: "He praises them for sharing both good and bad times." },
+        { q: "Ulysses can still hear the sounds of the battle of Troy because—", opts: ["that battle is an eventful chapter in his life", "he often dreams about becoming a soldier again", "he wants to participate in the battle once more", "Both (a) & (c)"], ans: 0, exp: "The battle of Troy remains a vivid, defining memory." },
+        { q: "Assertion: ?\nReason: Ulysses believes that life is meant to be lived to the fullest, regardless of one's circumstances.", opts: ["Ulysses decides to spend the rest of his life with his family", "Ulysses can't rule his people properly", "Ulysses is determined to seek new adventures despite his age", "Ulysses finds his fellow mariners as idle as his son"], ans: 2, exp: "Matches his determination to continue exploring even in old age." },
+        { q: "Ulysses hopes to continue striving and achieving even in the face of death, so—", opts: ["he keeps waiting for the end of his life", "he does not view death as the end of all endeavours", "he wants to spend more time with his family", "he wants to go away from his homeland, Ithaca"], ans: 1, exp: "‘Death closes all; but something ere the end… may yet be done’." },
+
+        // ===== Diagram-based =====
+        { q: "DIAGRAM: Center = ?\nConnected: passion for knowledge, love for adventure\n(a) People of Ithaca  (b) Telemachus  (c) Ulysses  (d) Penelope", opts: ["People of Ithaca", "Telemachus", "Ulysses", "Penelope"], ans: 2, exp: "These are the defining traits of Ulysses himself." },
+        { q: "DIAGRAM: Center = ?\nConnected: Lazy, Ignorant, Unambitious\n(a) People of Ithaca  (b) Telemachus  (c) Companions of Ulysses  (d) Achilles", opts: ["People of Ithaca", "Telemachus", "Companions of Ulysses", "Achilles"], ans: 0, exp: "Ulysses calls the people of Ithaca a savage race that only hoard, sleep and feed." },
+        { q: "DIAGRAM: Center = Telemachus\nAttributes: (I) Slow prudence  (II) Idle  (III) Blameless  (IV) Dutiful\nWhich adjective does NOT describe Telemachus?", opts: ["I", "II", "III", "IV"], ans: 1, exp: "Ulysses never calls Telemachus idle; he praises prudence, blamelessness and duty." },
+        { q: "DIAGRAM: Center = Ultimate strong will of Ulysses\nSurrounding: To strive, To seek, To find, ?\n(a) Not to shine in use  (b) To drink life to the lees  (c) To sail beyond sunset  (d) Not to yield", opts: ["Not to shine in use", "To drink life to the lees", "To sail beyond sunset", "Not to yield"], ans: 3, exp: "The line ends with ‘and not to yield’." },
+        { q: "DIAGRAM: Well-loved by Ulysses → ? ← Apt to take care of household gods\n(a) Achilles  (b) Paris  (c) Telemachus  (d) Penelope", opts: ["Achilles", "Paris", "Telemachus", "Penelope"], ans: 2, exp: "Telemachus is well-loved and will pay meet adoration to the household gods." },
+        { q: "DIAGRAM: Left (Eagerness for new voyage, Restlessness) → Ulysses\nCenter = ?\nRight = Telemachus (Temperament of heroic heart? Desire to explore?)\n(a) Telemachus  (b) Achilles  (c) Ulysses  (d) People of Troy", opts: ["Telemachus", "Achilles", "Ulysses", "People of Troy"], ans: 2, exp: "The contrast centres on Ulysses vs Telemachus." },
+        { q: "The place to which Telemachus, Ulysses and Penelope are all connected is—", opts: ["Athens", "Ithaca", "Troy", "Italy"], ans: 1, exp: "All three are linked to Ithaca." },
+        { q: "DIAGRAM: Metaphorical journey of life → ? → Represents desire for adventure\n(a) Life  (b) Death  (c) The Sea  (d) The isle", opts: ["Life", "Death", "The Sea", "The isle"], ans: 2, exp: "The sea is the central metaphor for the unending quest." },
+
+        // ===== Rearrangement =====
+        { q: "Rearrange: (I) Ulysses beckons his friends to join him for yet another adventure. (II) Ulysses returns home in his old age. (III) Telemachus becomes the ruler of the island. (IV) Ulysses wishes to live multiple lives to experience everything.", opts: ["(II), (IV), (III), (I)", "(I), (II), (III), (IV)", "(I), (III), (IV), (II)", "(I), (III), (II), (IV)"], ans: 0, exp: "Returns → reflects on experience → leaves kingdom → calls mariners." },
+        { q: "Rearrange: (I) “Death closes all; but something ere the end/Some work of noble note, may yet be done.” (II) “To strive, to seek, to find, and not to yield” (III) “I cannot rest from travel:” (IV) “I am a part of all that I have met”", opts: ["(III), (IV), (I), (II)", "(III), (IV), (II), (I)", "(I), (III), (II), (IV)", "(I), (III), (IV), (II)"], ans: 0, exp: "Travel → experience → death may come → still strive." },
+        { q: "Order: (I) Ulysses reflects on his past. (II) Ulysses introduces his son, Telemachus. (III) Ulysses decides to sail again. (IV) Ulysses describes his current life.", opts: ["(IV), (I), (II), (III)", "(I), (IV), (III), (II)", "(I), (III), (II), (IV)", "(I), (III), (IV), (II)"], ans: 0, exp: "Current idle life → past → son → decision to sail." },
+        { q: "Rearrange: (I) Ulysses and his companions are brave… (II) Telemachus is the heir… (III) Ulysses may reach paradise and meet Achilles. (IV) The thought of taking rest is hateful to him.", opts: ["(IV), (II), (III), (I)", "(I), (IV), (III), (II)", "(II), (III), (IV), (I)", "(I), (III), (IV), (II)"], ans: 0, exp: "Hatred of rest → son as heir → possible Happy Isles → strong will of companions." },
+        { q: "Rearrange: (I) “I will drink life to the lees:” (II) “Yet all experience is an arch” (III) “This is my son, mine own Telemachus” (IV) “Push off, and sitting well in order smite/ The sounding furrows;”", opts: ["(I), (II), (III), (IV)", "(I), (III), (II), (IV)", "(I), (III), (IV), (II)", "(III), (IV), (I), (II)"], ans: 0, exp: "Drink life → experience as arch → introduces son → push off." },
+        { q: "Rearrange: (I) Ulysses has enjoyed greatly. (II) Ulysses has suffered greatly. (III) Ulysses has roamed with a hungry heart. (IV) Ulysses has become a name.", opts: ["(IV), (III), (II), (I)", "(I), (III), (IV), (II)", "(III), (II), (I), (IV)", "(III), (I), (IV), (II)"], ans: 2, exp: "Roamed → suffered & enjoyed → become a name." },
+        { q: "Rearrange: (I) Ulysses addressed his mariners… (II) He resolved to entrust duties to Telemachus. (III) He was dissatisfied with life in Ithaca. (IV) He was always in the quest of an adventure.", opts: ["(I), (III), (II), (IV)", "(IV), (III), (II), (I)", "(III), (II), (IV), (I)", "(IV), (I), (III), (II)"], ans: 1, exp: "Always questing → dissatisfied → entrusts son → addresses mariners." },
+
+        // ===== True / False & Statements =====
+        { q: "Pick the TRUE statement(s):\n(I) Ulysses never left Ithaca\n(II) The subjects of Ulysses were very civilised\n(III) Telemachus was hated by the people\n(IV) Ulysses became tired of his life as an idle king", opts: ["(I)", "(II)", "(III)", "(IV)"], ans: 3, exp: "Only (IV) is true." },
+        { q: "The theme of ‘Ulysses’ is—\n(I) Seeking adventures for merriment\n(II) Not sitting idle at home and doing some noble work\n(III) Enjoying a sea voyage for personal gratification\n(IV) Discovering old islands and capturing them", opts: ["(I) & (IV)", "(II) & (III)", "(II)", "(III)"], ans: 2, exp: "The core theme is the refusal to remain idle and the will to continue noble work." },
+        { q: "Pick the TRUE:\n(I) According to Ulysses, the people of Ithaca know the true worth of Ulysses\n(II) Ulysses is the king of Troy\n(III) Ulysses would give the sceptre and the isle to his son\n(IV) The wife of Ulysses is young", opts: ["(I) & (III)", "(III)", "(II) & (III)", "(IV)"], ans: 1, exp: "Only (III) is true." },
+        { q: "Ulysses compares himself to a—", opts: ["rising star", "sinking star", "bright star", "twinkling star"], ans: 1, exp: "He follows knowledge like a sinking star." },
+        { q: "Pick the TRUE:\n(I) The speaker is happy with Telemachus because he has qualities of a good ruler\n(II) The speaker does not know who Achilles is\n(III) The speaker wants to spend an active life despite his age\n(IV) ‘Windy Troy’ refers to the sound of roaring waves", opts: ["(II) & (III)", "(III) & (IV)", "(I) & (III)", "(I) & (IV)"], ans: 2, exp: "(I) and (III) are true." },
+        { q: "Pick the TRUE:\n(I) The thirst for knowledge does not fade away\n(II) It is very wise to pause\n(III) Ulysses does not want to seek a newer world\n(IV) Ulysses roams with a hungry heart", opts: ["(I) & (III)", "(I) & (IV)", "(I) & (II)", "(II) & (III)"], ans: 1, exp: "(I) and (IV) are true." },
+        { q: "Statement (I): Ulysses compares himself to a sword that will “rust unburnish’d” if left unused.\nStatement (II): He urges his mariners to sail westward, toward the rising sun.", opts: ["Both true", "I true, II false", "I false, II true", "Both false"], ans: 1, exp: "I is true; II is false (he sails beyond the sunset / western stars)." },
+        { q: "Statement (I): Ulysses admires Telemachus for his adventurous spirit.\nStatement (II): Telemachus is described as blameless.", opts: ["Both true", "I false, II true", "I true, II false", "Both false"], ans: 1, exp: "Telemachus is blameless and prudent, not adventurous." },
+        { q: "Statement (I): Ulysses speaks of his wife as being still youthful.\nStatement (II): Ulysses claims that he wants to take rest from travel.", opts: ["I true, II false", "I false, II true", "Both true", "Both false"], ans: 3, exp: "Both false – ‘aged wife’ and ‘I cannot rest from travel’." },
+        { q: "Statement (I): Ulysses expresses his disgust at leading a life of retirement as an idle king.\nStatement (II): Ulysses encourages his fellow mariners to face challenges and difficulties boldly.", opts: ["Both true", "I true, II false", "I false, II true", "Both false"], ans: 0, exp: "Both statements are true." },
+        { q: "(I) Ulysses does not want to take rest from travel.\n(II) To pause is not dull according to Ulysses.\n(III) Telemachus will go for travel.\n(IV) Ulysses wants to drink life to the lees.", opts: ["Only (I) is true", "Only (II) is true", "All are incorrect", "Only (I) and (IV) are correct"], ans: 3, exp: "(I) and (IV) are correct; pausing is dull to him." },
+        { q: "(I) Telemachus does not do his work with responsibility.\n(II) Telemachus lives in the Happy Isles.\n(III) Ulysses has been to many countries.\n(IV) The poem celebrates life experiences and adventures of Ulysses.", opts: ["Only (I) and (II) are correct", "Only (III) and (IV) are correct", "Only (I) and (III) are correct", "Only (I) and (IV) are incorrect"], ans: 1, exp: "(III) and (IV) are correct." },
+
+        // ===== Case-based =====
+        { q: "Case: “This is my son, mine own Telemachus… by slow prudence to make mild / A rugged people…” — Why does Ulysses think Telemachus is better suited to be the ruler?", opts: ["He has an adventurous spirit", "He has the ability to rule with patience and wisdom", "He loves battles", "He wants to abandon Ithaca"], ans: 1, exp: "Slow prudence and soft degrees make him ideal for ruling a rugged people." },
+        { q: "Case: Ulysses views his son as a suitable ruler of Ithaca — What is Ulysses’ attitude towards Telemachus?", opts: ["He is inspired by him", "He is indifferent to him", "He is disappointed with him", "He is proud of him"], ans: 3, exp: "He is proud of Telemachus’ qualities as a ruler." },
+        { q: "Case: “To strive, to seek, to find, and not to yield” — What does Ulysses mean?", opts: ["He refuses to return to the sea voyage", "He regrets not being able to find solace at home", "He refuses to accept defeat and wants to continue living life to the fullest", "He wants a simple, normal life without adventures"], ans: 2, exp: "Declaration of indomitable will." },
+        { q: "Case: Ulysses feels bored and stagnant in Ithaca — Why?", opts: ["Ulysses is stuck in a calm, routine life and misses adventure and exploration", "Ithaca is destroyed by foreign invaders", "Ulysses is captivated by his own son", "He believes only young men should travel"], ans: 0, exp: "Idle kingship is dull; he longs for exploration." },
+        { q: "“Come, my friends, / ’T is not too late to seek a newer world” suggests—", opts: ["He has given up on adventure", "He wants his companions to return home", "He encourages his fellow mariners to continue exploring new places despite being old", "He believes only young men should travel"], ans: 2, exp: "Age is no barrier to seeking a newer world." },
+        { q: "Ulysses uses a metaphor to express his desire to live life fully. Which is it?", opts: ["Drinking life to the lees", "Home is where the heart is", "To strive, to seek, to find, and not to yield", "Sailing through storms"], ans: 0, exp: "‘I will drink / Life to the lees’." },
+        { q: "What is the symbolic meaning of the sea in the poem ‘Ulysses’?", opts: ["It represents Ulysses’ fear of death", "It represents the barren life of Ithaca", "It represents Ulysses’ desire for adventure", "It represents Telemachus’ sense of responsibility"], ans: 2, exp: "The sea stands for the unending quest and the unknown." },
+        { q: "If you choose a line for comparative study with ‘Ulysses’, which fits best?", opts: ["“Miles to go before I sleep” (Frost)", "“I am the master of my fate / I am the captain of my soul” (Henley)", "“Old age should burn and rave at close of day” (Dylan Thomas)", "All of the above"], ans: 3, exp: "All three share themes of perseverance, will and refusal to yield to age/death." },
+        { q: "Suppose Ulysses is forced to live a quiet, peaceful and monotonous family life. How would he feel?", opts: ["Irritated", "Unhappy", "Restless", "All of these"], ans: 3, exp: "He would feel irritated, unhappy and restless." },
+        { q: "After Ulysses leaves, how do you think Telemachus would react?", opts: ["As described by Ulysses, he will rule Ithaca wisely and justly", "He will also set out in search of knowledge like his father", "He will blindly follow the instructions given by his father", "None of these"], ans: 0, exp: "Ulysses himself describes Telemachus as suited to rule wisely." }
+      ],
+
+      riders: [
+        { q: "In which year was the play ‘Riders to the Sea’ written / first staged?", opts: ["1902", "1904", "1903", "1910"], ans: 1, exp: "First performed in 1904." },
+        { q: "How many acts are there in the play?", opts: ["4", "3", "1", "2"], ans: 2, exp: "One-act play." },
+        { q: "Synge’s ‘Riders to the Sea’ is considered a one-act—", opts: ["comedy", "tragi-comedy", "tragedy", "farce"], ans: 2, exp: "Tragedy." },
+        { q: "The setting of the one-act play is—", opts: ["Donegal Islands", "Aran Islands", "Galway Islands", "Connemara Islands"], ans: 1, exp: "Aran Islands, west coast of Ireland." },
+        { q: "What natural element heavily influences the family’s life?", opts: ["Wind", "Rain", "Sea", "Fire"], ans: 2, exp: "The sea is both provider and destroyer." },
+        { q: "The mention of ‘oil-skins’ in the opening scene indicates that—", opts: ["the characters are celebrating a festival", "the characters ride to the sea frequently", "the characters are setting up a marketplace", "the characters are attending a religious ceremony"], ans: 1, exp: "Oil-skins are worn by those who go to the sea." },
+        { q: "The word ‘spinning wheel’ indicates the—", opts: ["end of life", "life in a stagnant situation", "misery of life", "continuity of life"], ans: 3, exp: "It suggests the continuous, everyday rhythm of life." },
+        { q: "Cathleen is a girl of about—", opts: ["twenty-five years", "nineteen years", "twenty years", "twenty-nine years"], ans: 2, exp: "About twenty years old." },
+        { q: "What is Cathleen doing at the beginning of the play?", opts: ["Singing", "Sewing", "Reading", "Kneading cake"], ans: 3, exp: "Kneading cake." },
+        { q: "After entering the cottage kitchen, Nora asks about—", opts: ["Singing", "Sheamus", "Kneading cake", "Maurya"], ans: 3, exp: "She asks about Maurya." },
+        { q: "What does Cathleen say Maurya is doing at the beginning?", opts: ["Lying down", "Singing", "Kneading cake", "Wailing"], ans: 0, exp: "Maurya is lying down." },
+        { q: "What is Maurya worried about at the beginning?", opts: ["Losing her sheep", "Michael and Bartley’s well-being", "The approaching storm", "The lack of food"], ans: 1, exp: "She worries about Michael and Bartley." },
+        { q: "Who gave the bundle of clothes to Nora?", opts: ["A villager", "Bartley", "The young priest", "Maurya"], ans: 2, exp: "The young priest." },
+        { q: "The bundle of clothes contained—", opts: ["a coat and trousers", "a shirt and a plain stocking", "a hat and boots", "a rosary and a bible"], ans: 1, exp: "A shirt and a plain stocking." },
+        { q: "What news does Nora bring at the beginning?", opts: ["Michael has returned home", "Bartley is leaving for the mainland", "A body has been found in Donegal that might be Michael’s", "There’s a storm coming"], ans: 2, exp: "A body found in Donegal that may be Michael’s." },
+        { q: "Nora and Cathleen assumed Michael died by—", opts: ["a gunshot", "committing suicide", "illness", "drowning"], ans: 3, exp: "Drowning." },
+        { q: "If the clothes belong to Michael, they should tell their mother that Michael has already been given—", opts: ["a new cloth", "food", "a decent burial", "a new life"], ans: 2, exp: "A decent burial." },
+        { q: "Cathleen wanted Nora to talk to the priest about—", opts: ["Michael’s arrival", "stopping Bartley from going to the sea", "Maurya’s health", "her marriage"], ans: 1, exp: "Stopping Bartley from going to the sea." },
+        { q: "The priest said he would not stop Bartley because—", opts: ["he had faith in Bartley", "he had no intention of saving Bartley", "he had faith that God is not so cruel to take away Maurya’s last son", "he didn’t want to get involved"], ans: 2, exp: "Faith that God will not take the last son." },
+        { q: "What does the phrase ‘middling bad’ mean?", opts: ["Totally different situation", "Exceptionally bad", "Neither too bad nor too good", "Extremely good"], ans: 2, exp: "Neither too bad nor too good." },
+        { q: "When will the big storm be worse?", opts: ["When the rain starts", "At night", "After landfall", "When the tide faces the wind"], ans: 3, exp: "When the tide faces the wind." },
+        { q: "To whom did the priest entrust the duty of identifying the stocking?", opts: ["Nora", "Maurya", "Cathleen", "Both (a) & (c)"], ans: 3, exp: "Both Nora and Cathleen." },
+        { q: "“It’s a long time we’ll be, and the two of us crying” — Why would they be crying?", opts: ["They would remember their childhood", "Their mother might go missing", "They might find out that the stocking belongs to Michael", "Nora was suffering from a deadly disease"], ans: 2, exp: "If the stocking is Michael’s they will cry." },
+        { q: "Cathleen and Nora hid the bundle in the turf-loft because—", opts: ["they wanted to preserve it", "they were not sure what to do with it", "they wanted to hide it from Maurya", "the young priest asked them to do so"], ans: 2, exp: "To hide it from Maurya." },
+        { q: "Who was baking the cake for Bartley?", opts: ["Maurya", "Cathleen", "Nora", "Michael"], ans: 1, exp: "Cathleen." },
+        { q: "Why was Bartley in need of a cake?", opts: ["He was hungry", "He was going to sail to Connemara", "He wanted to take the cake to Michael", "He loves to eat cake"], ans: 1, exp: "He was going to sail to Connemara / Galway fair." },
+        { q: "Why according to Maurya can Bartley not go to Connemara?", opts: ["His health is deteriorating", "The young priest asked him not to", "It is raining cats and dogs", "The wind is rising from the south and west"], ans: 3, exp: "The wind is rising from the south and west." },
+        { q: "Who does Maurya think will stop Bartley from going to Connemara?", opts: ["His own conscience", "The young priest", "Nora", "Cathleen"], ans: 1, exp: "The young priest." },
+        { q: "Whom did Nora hear saying Bartley would go to Connemara?", opts: ["Eamon Simon, Stephen Pheety and Colum Shawn", "Eamon Pheety, Colum Simon and Stephen Shawn", "Eamon Shawn, Stephen Simon and Colum Pheety", "Eamon Simon, Stephen Pheety and Colum Shawn"], ans: 0, exp: "Eamon Simon, Stephen Pheety and Colum Shawn." },
+        { q: "According to Nora, why did Bartley go down?", opts: ["To ride horses", "To check if there would be another boat sailing in the week", "To find halter for his horses", "To talk to the priest"], ans: 1, exp: "To check if there would be another boat." },
+        { q: "The boat that Bartley went down to check was coming from the—", opts: ["south", "east", "west", "north"], ans: 0, exp: "South." },
+        { q: "After entering the house, Bartley was looking for—", opts: ["cake", "fishing net", "stick", "new rope"], ans: 3, exp: "New rope." },
+        { q: "Where was the rope hanging which Bartley was looking for?", opts: ["Near the turf-loft", "On a nail by the white boards", "Beside the pot-fire", "Behind the door"], ans: 1, exp: "On a nail by the white boards." },
+        { q: "Which animal was chewing on the rope?", opts: ["A sheep", "A dog", "A pig", "A cat"], ans: 2, exp: "A pig." },
+        { q: "According to Maurya, when will the rope be needed?", opts: ["When Bartley would start his journey", "When Michael’s body would be found", "When Maurya will take out the cake", "When Michael would return"], ans: 1, exp: "When Michael’s body is found." },
+        { q: "According to Maurya, the rope will be needed—", opts: ["to do household chores", "to hang the clothes", "to dig a deep grave for Michael", "to use it in the well"], ans: 2, exp: "To dig a deep grave for Michael." },
+        { q: "Bartley wants the rope for—", opts: ["the coffin", "a halter", "the well", "a noose"], ans: 1, exp: "A halter." },
+        { q: "Who wanted to go to the Galway fair?", opts: ["Cathleen", "Maurya", "Bartley", "Nora"], ans: 2, exp: "Bartley." },
+        { q: "Why was Bartley in a hurry?", opts: ["The current boat might be the only boat to go to the Galway fair", "He wanted to go looking for Michael", "He had to save his red mare", "None of these"], ans: 0, exp: "The current boat might be the only one." },
+        { q: "What has Bartley heard about the Galway fair?", opts: ["One can earn good money there through gambling", "One can earn enough money there through selling horses", "One can make good money there by selling cakes", "One can earn enough money there by selling fine white boards"], ans: 1, exp: "Selling horses." },
+        { q: "The fine white boards were bought from—", opts: ["Galway", "Dublin", "Connemara", "Donegal"], ans: 2, exp: "Connemara." },
+        { q: "Bartley and the others have been looking for Michael’s body for—", opts: ["seven days", "four days", "nine days", "ten days"], ans: 2, exp: "Nine days." },
+        { q: "According to Maurya, the value of a son cannot be replaced by the price of—", opts: ["a hundred or a thousand horses", "a herd of cattle", "a bag of gold", "a chest of treasure"], ans: 0, exp: "A hundred or a thousand horses." },
+        { q: "What should Nora and Cathleen do if the west wind continues to last until the last bit of this moon?", opts: ["They should find a job", "They should sell weed", "They should collect enough weed", "They should take care of the horse and the pig"], ans: 2, exp: "Collect enough seaweed (weed)." }
+      ],
+
+      casuarina: [
+        { q: "Who is the author of ‘Our Casuarina Tree’?", opts: ["Sarojini Naidu", "Kamala Das", "Toru Dutt", "Rabindranath Tagore"], ans: 2, exp: "Toru Dutt." },
+        { q: "What is compared to a huge python in the poem?", opts: ["The trunk of the tree", "The creeper", "The branches", "The garden"], ans: 1, exp: "The creeper winds like a huge python." },
+        { q: "“Like a huge python…” shows which figure of speech?", opts: ["Metaphor", "Simile", "Personification", "Alliteration"], ans: 1, exp: "Simile." },
+        { q: "The trunk of the Casuarina tree is described as—", opts: ["Smooth and tall", "Thin and delicate", "Rugged with deep scars", "Covered with flowers"], ans: 2, exp: "Rugged and indented deep with scars." },
+        { q: "“Up to its summit near the stars” means—", opts: ["The tree is very tall", "The tree shines at night", "The tree cannot be seen", "It needs support"], ans: 0, exp: "Emphasises the great height." },
+        { q: "The tree wears the creeper like a—", opts: ["Scarf", "Shawl", "Blanket", "Rope"], ans: 1, exp: "‘The giant wears the scarf’." },
+        { q: "What hangs from the branches?", opts: ["Fruits", "Leaves", "Crimson flowers", "Monkeys"], ans: 2, exp: "Crimson flowers." },
+        { q: "The Casuarina tree mainly symbolises—", opts: ["Nature’s cruelty", "Childhood memories and loved ones", "Supernatural power", "Political freedom"], ans: 1, exp: "Living link to childhood and lost siblings." },
+        { q: "The poem is best described as an—", opts: ["Sonnet", "Ode", "Elegy", "Dramatic monologue"], ans: 1, exp: "An ode." },
+        { q: "The poetess wants her verse to—", opts: ["Cut down the tree", "Immortalise the tree", "Describe only the flowers", "Forget the past"], ans: 1, exp: "Protect it from oblivion through poetry." },
+        { q: "‘Borrowdale’ refers to—", opts: ["A place in India", "A valley in England", "A lake in Ireland", "A city in France"], ans: 1, exp: "Valley in the Lake District of England." },
+        { q: "The ‘sweet companions’ are—", opts: ["Birds and bees", "Her siblings (Abju and Aru)", "Village children", "The grey baboon"], ans: 1, exp: "Her brother and sister." },
+        { q: "Toru Dutt was sometimes called the—", opts: ["Indian Shelley", "Indian Keats", "Indian Wordsworth", "Indian Byron"], ans: 1, exp: "Indian Keats." },
+        { q: "The poem was published in the collection—", opts: ["Lyrical Ballads", "Ancient Ballads and Legends of Hindustan", "Song Offerings", "Sanchita"], ans: 1, exp: "Ancient Ballads and Legends of Hindustan (1881)." },
+        { q: "Who stands ‘gallantly’ on the ground?", opts: ["the Casuarina tree", "the Banyan tree", "the Cashew Tree", "the creeper"], ans: 0, exp: "The Casuarina tree stands gallantly." },
+        { q: "What is climbing on the Casuarina Tree?", opts: ["A creeper", "A snake", "None of these", "A vine only"], ans: 0, exp: "A creeper." },
+        { q: "“The giant wears the scarf” means—", opts: ["the cover of leaves", "the cover of cloth", "the cover of net", "the creeper around the tree"], ans: 3, exp: "The creeper is the scarf the giant (tree) wears." },
+        { q: "Who gathers on the Casuarina tree?", opts: ["birds and bees", "worms and bees", "birds and worms", "only monkeys"], ans: 0, exp: "Birds and bees." },
+        { q: "The author is fond of the Casuarina tree because it reminds her of—", opts: ["childhood days", "its magnificent size", "birds and bees", "the python"], ans: 0, exp: "Childhood days and lost companions." }
+      ]
+    };
+
+    // ========== STATE ==========
+    let currentView = 'home';
+    let examMode = false;
+    let examStarted = false;
+    let timerInterval = null;
+    let timeLeft = 20 * 60; // 20 minutes
+    let userAnswers = {};
+
+    // ========== RENDER QUESTIONS ==========
+    function renderQuestions(topic, containerId, isExam = false) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      const qs = questions[topic];
+      qs.forEach((item, idx) => {
+        const qId = `${topic}-${idx}`;
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.id = `card-${qId}`;
+        card.innerHTML = `
+          <div class="q-num">Q${idx + 1}</div>
+          <div class="q-text">${item.q.replace(/\n/g, '<br>')}</div>
+          <div class="options" id="opts-${qId}"></div>
+          <div class="feedback" id="fb-${qId}"></div>
+        `;
+        container.appendChild(card);
+
+        const optsDiv = card.querySelector(`#opts-${qId}`);
+        item.opts.forEach((opt, oIdx) => {
+          const btn = document.createElement('div');
+          btn.className = 'opt';
+          btn.innerHTML = `<span class="opt-letter">${String.fromCharCode(65 + oIdx)}</span><span>${opt}</span>`;
+          btn.onclick = () => handleAnswer(topic, idx, oIdx, isExam);
+          optsDiv.appendChild(btn);
+        });
+      });
+    }
+
+    function handleAnswer(topic, qIdx, optIdx, isExam) {
+      const item = questions[topic][qIdx];
+      const qId = `${topic}-${qIdx}`;
+      const card = document.getElementById(`card-${qId}`);
+      const opts = card.querySelectorAll('.opt');
+      const fb = document.getElementById(`fb-${qId}`);
+
+      if (isExam) {
+        // just mark selection, no reveal
+        opts.forEach((o, i) => {
+          o.classList.toggle('selected', i === optIdx);
+        });
+        userAnswers[qId] = optIdx;
+        updateLiveScore();
+        return;
+      }
+
+      // Practice mode – reveal
+      if (opts[0].classList.contains('disabled')) return; // already answered
+
+      opts.forEach((o, i) => {
+        o.classList.add('disabled');
+        if (i === item.ans) o.classList.add('correct-ans');
+        if (i === optIdx && i !== item.ans) o.classList.add('wrong-ans');
+        if (i === optIdx) o.classList.add('selected');
+      });
+
+      const correct = optIdx === item.ans;
+      card.classList.add(correct ? 'correct' : 'wrong');
+      fb.className = `feedback show ${correct ? 'correct' : 'wrong'}`;
+      fb.innerHTML = correct
+        ? `✅ Correct! ${item.exp}`
+        : `❌ Wrong. Correct answer: <strong>${String.fromCharCode(65 + item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
+    }
+
+    // ========== NAVIGATION ==========
+    function showView(view) {
+      document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('examBar').classList.remove('active');
+      examMode = false;
+      examStarted = false;
+      clearInterval(timerInterval);
+
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`.nav-btn[data-view="${view}"]`);
+      if (btn) btn.classList.add('active');
+
+      if (view === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+      } else if (view === 'ulysses') {
+        document.getElementById('view-ulysses').classList.remove('hidden');
+        renderQuestions('ulysses', 'ulysses-qs', false);
+      } else if (view === 'riders') {
+        document.getElementById('view-riders').classList.remove('hidden');
+        renderQuestions('riders', 'riders-qs', false);
+      } else if (view === 'casuarina') {
+        document.getElementById('view-casuarina').classList.remove('hidden');
+        renderQuestions('casuarina', 'casuarina-qs', false);
+      } else if (view === 'exam') {
+        document.getElementById('view-exam').classList.remove('hidden');
+        document.getElementById('exam-qs').innerHTML = '';
+        document.getElementById('startExamBtn').style.display = 'inline-block';
+      }
+      currentView = view;
+      window.scrollTo(0, 0);
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => showView(btn.dataset.view));
     });
-  });
-}
-function handleAnswer(topic,qIdx,optIdx,isExam){
-  const item=questions[topic][qIdx];const qId=`${topic}-${qIdx}`;
-  const card=document.getElementById(`card-${qId}`);const opts=card.querySelectorAll('.opt');const fb=document.getElementById(`fb-${qId}`);
-  if(isExam){opts.forEach((o,i)=>o.classList.toggle('selected',i===optIdx));userAnswers[qId]=optIdx;updateLiveScore();return;}
-  if(opts[0].classList.contains('disabled'))return;
-  opts.forEach((o,i)=>{o.classList.add('disabled');if(i===item.ans)o.classList.add('correct-ans');if(i===optIdx&&i!==item.ans)o.classList.add('wrong-ans');if(i===optIdx)o.classList.add('selected');});
-  const correct=optIdx===item.ans;card.classList.add(correct?'correct':'wrong');
-  fb.className=`feedback show ${correct?'correct':'wrong'}`;
-  fb.innerHTML=correct?`✅ Correct! ${item.exp}`:`❌ Wrong. Correct: <strong>${String.fromCharCode(65+item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
-}
-function showView(view){
-  document.querySelectorAll('[id^="view-"]').forEach(el=>el.classList.add('hidden'));
-  document.getElementById('results').classList.remove('show');document.getElementById('examBar').classList.remove('active');
-  examMode=false;examStarted=false;clearInterval(timerInterval);
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const btn=document.querySelector(`.nav-btn[data-view="${view}"]`);if(btn)btn.classList.add('active');
-  if(view==='home')document.getElementById('view-home').classList.remove('hidden');
-  else if(view==='ulysses'){document.getElementById('view-ulysses').classList.remove('hidden');renderQuestions('ulysses','ulysses-qs',false);}
-  else if(view==='riders'){document.getElementById('view-riders').classList.remove('hidden');renderQuestions('riders','riders-qs',false);}
-  else if(view==='casuarina'){document.getElementById('view-casuarina').classList.remove('hidden');renderQuestions('casuarina','casuarina-qs',false);}
-  else if(view==='exam'){document.getElementById('view-exam').classList.remove('hidden');document.getElementById('exam-qs').innerHTML='';document.getElementById('startExamBtn').style.display='inline-block';}
-  currentView=view;window.scrollTo(0,0);
-}
-document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
-function startExam(){showView('exam');}
-function beginExam(){
-  examMode=true;examStarted=true;userAnswers={};timeLeft=20*60;
-  document.getElementById('startExamBtn').style.display='none';document.getElementById('examBar').classList.add('active');document.getElementById('results').classList.remove('show');
-  const examContainer=document.getElementById('exam-qs');examContainer.innerHTML='';let total=0;
-  ['ulysses','riders','casuarina'].forEach(topic=>{
-    const section=document.createElement('div');
-    section.innerHTML=`<div class="section-title" style="font-size:1.15rem;margin-top:1.5rem">${topic==='ulysses'?'🌊 Ulysses':topic==='riders'?'⛵ Riders to the Sea':'🌳 Our Casuarina Tree'}</div>`;
-    examContainer.appendChild(section);const sub=document.createElement('div');sub.id=`exam-${topic}`;examContainer.appendChild(sub);
-    renderQuestions(topic,`exam-${topic}`,true);total+=questions[topic].length;
-  });
-  document.getElementById('totalQ').textContent=total;document.getElementById('liveScore').textContent='0';
-  updateTimerDisplay();timerInterval=setInterval(tick,1000);
-}
-function tick(){timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);submitExam();}}
-function updateTimerDisplay(){const m=Math.floor(timeLeft/60).toString().padStart(2,'0');const s=(timeLeft%60).toString().padStart(2,'0');document.getElementById('timer').textContent=`⏱ ${m}:${s}`;}
-function updateLiveScore(){let correct=0;Object.keys(userAnswers).forEach(qId=>{const[topic,idx]=qId.split('-');if(userAnswers[qId]===questions[topic][parseInt(idx)].ans)correct++;});document.getElementById('liveScore').textContent=correct;}
-document.getElementById('submitExam').onclick=submitExam;
-function submitExam(){
-  clearInterval(timerInterval);examStarted=false;document.getElementById('examBar').classList.remove('active');
-  let total=0,correct=0;
-  ['ulysses','riders','casuarina'].forEach(topic=>{
-    questions[topic].forEach((item,idx)=>{
-      total++;const qId=`${topic}-${idx}`;const selected=userAnswers[qId];
-      const card=document.getElementById(`card-${qId}`);const opts=card.querySelectorAll('.opt');
-      opts.forEach((o,i)=>{o.classList.add('disabled');if(i===item.ans)o.classList.add('correct-ans');if(selected===i&&i!==item.ans)o.classList.add('wrong-ans');});
-      if(selected===item.ans){correct++;card.classList.add('correct');}else card.classList.add('wrong');
-      const fb=document.getElementById(`fb-${qId}`);
-      fb.className=`feedback show ${selected===item.ans?'correct':'wrong'}`;
-      fb.innerHTML=selected===item.ans?`✅ Correct! ${item.exp}`:`❌ ${selected===undefined?'Not answered.':'Wrong.'} Correct: <strong>${String.fromCharCode(65+item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
-    });
-  });
-  const pct=Math.round((correct/total)*100);
-  document.getElementById('finalScore').textContent=pct+'%';
-  document.getElementById('scoreDetail').textContent=`You scored ${correct} out of ${total}`;
-  document.getElementById('results').classList.add('show');document.getElementById('results').scrollIntoView({behavior:'smooth'});
-}
-showView('home');
-</script>
+
+    // ========== EXAM MODE ==========
+    function startExam() {
+      showView('exam');
+    }
+
+    function beginExam() {
+      examMode = true;
+      examStarted = true;
+      userAnswers = {};
+      timeLeft = 20 * 60;
+      document.getElementById('startExamBtn').style.display = 'none';
+      document.getElementById('examBar').classList.add('active');
+      document.getElementById('results').classList.remove('show');
+
+      // Combine all questions
+      const examContainer = document.getElementById('exam-qs');
+      examContainer.innerHTML = '';
+      let total = 0;
+      ['ulysses', 'riders', 'casuarina'].forEach(topic => {
+        const section = document.createElement('div');
+        section.innerHTML = `<div class="section-title" style="font-size:1.15rem;margin-top:1.5rem;">${topic === 'ulysses' ? '🌊 Ulysses' : topic === 'riders' ? '⛵ Riders to the Sea' : '🌳 Our Casuarina Tree'}</div>`;
+        examContainer.appendChild(section);
+        const sub = document.createElement('div');
+        sub.id = `exam-${topic}`;
+        examContainer.appendChild(sub);
+        renderQuestions(topic, `exam-${topic}`, true);
+        total += questions[topic].length;
+      });
+      document.getElementById('totalQ').textContent = total;
+      document.getElementById('liveScore').textContent = '0';
+      updateTimerDisplay();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    function tick() {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        submitExam();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const s = (timeLeft % 60).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `⏱ ${m}:${s}`;
+    }
+
+    function updateLiveScore() {
+      let correct = 0;
+      Object.keys(userAnswers).forEach(qId => {
+        const [topic, idx] = qId.split('-');
+        if (userAnswers[qId] === questions[topic][parseInt(idx)].ans) correct++;
+      });
+      document.getElementById('liveScore').textContent = correct;
+    }
+
+    document.getElementById('submitExam').onclick = submitExam;
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      examStarted = false;
+      document.getElementById('examBar').classList.remove('active');
+
+      let total = 0, correct = 0;
+      ['ulysses', 'riders', 'casuarina'].forEach(topic => {
+        questions[topic].forEach((item, idx) => {
+          total++;
+          const qId = `${topic}-${idx}`;
+          const selected = userAnswers[qId];
+          const card = document.getElementById(`card-${qId}`);
+          const opts = card.querySelectorAll('.opt');
+          opts.forEach((o, i) => {
+            o.classList.add('disabled');
+            if (i === item.ans) o.classList.add('correct-ans');
+            if (selected === i && i !== item.ans) o.classList.add('wrong-ans');
+          });
+          if (selected === item.ans) {
+            correct++;
+            card.classList.add('correct');
+          } else {
+            card.classList.add('wrong');
+          }
+          const fb = document.getElementById(`fb-${qId}`);
+          fb.className = `feedback show ${selected === item.ans ? 'correct' : 'wrong'}`;
+          fb.innerHTML = selected === item.ans
+            ? `✅ Correct! ${item.exp}`
+            : `❌ ${selected === undefined ? 'Not answered.' : 'Wrong.'} Correct: <strong>${String.fromCharCode(65 + item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
+        });
+      });
+
+      const pct = Math.round((correct / total) * 100);
+      document.getElementById('finalScore').textContent = pct + '%';
+      document.getElementById('scoreDetail').textContent = `You scored ${correct} out of ${total}`;
+      document.getElementById('results').classList.add('show');
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initial
+    showView('home');
+
+    // Simple PWA install prompt helper
+    if ('serviceWorker' in navigator) {
+      // optional: register a minimal SW later
+    }
+  </script>
 </body>
 </html>
