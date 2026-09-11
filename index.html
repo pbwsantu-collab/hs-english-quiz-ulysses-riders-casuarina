@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0f172a"/>
+<title>HS English Quiz | Ulysses • Riders • Casuarina</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--accent:#38bdf8;--accent2:#a78bfa;--success:#4ade80;--danger:#f87171;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;--radius:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(160deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);color:var(--text);min-height:100vh;line-height:1.5}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.logo{font-weight:800;font-size:1.15rem;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:.4rem;flex-wrap:wrap}
+.nav-btn{background:transparent;border:1px solid transparent;color:var(--muted);padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-size:.9rem}
+.nav-btn:hover,.nav-btn.active{background:var(--card);color:var(--accent);border-color:var(--accent)}
+.hero{text-align:center;padding:3rem 1.5rem 2rem;max-width:720px;margin:0 auto}
+.hero h1{font-size:clamp(1.8rem,5vw,2.6rem);margin-bottom:.75rem;background:linear-gradient(90deg,#38bdf8,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);margin-bottom:1.5rem}
+.mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:800px;margin:0 auto 2rem;padding:0 1rem}
+.mode-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;cursor:pointer;text-align:center;transition:transform .2s}
+.mode-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.mode-card h3{margin-bottom:.4rem;color:var(--accent)}
+.mode-card p{font-size:.9rem;color:var(--muted)}
+.container{max-width:780px;margin:0 auto;padding:1rem 1.25rem 4rem}
+.section-title{font-size:1.4rem;margin:1.5rem 0 1rem;display:flex;align-items:center;gap:.5rem}
+.badge{background:var(--accent2);color:#0f172a;font-size:.75rem;padding:.2rem .6rem;border-radius:999px;font-weight:700}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.4rem;margin-bottom:1.25rem}
+.q-card.correct{border-color:var(--success)}
+.q-card.wrong{border-color:var(--danger)}
+.q-num{font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:.4rem}
+.q-text{font-size:1.05rem;margin-bottom:1rem}
+.options{display:flex;flex-direction:column;gap:.55rem}
+.opt{background:#0f172a;border:1px solid var(--border);border-radius:12px;padding:.7rem 1rem;cursor:pointer;display:flex;align-items:flex-start;gap:.6rem;text-align:left}
+.opt:hover:not(.disabled){border-color:var(--accent);background:#1e293b}
+.opt.selected{border-color:var(--accent);background:rgba(56,189,248,.12)}
+.opt.correct-ans{border-color:var(--success);background:rgba(74,222,128,.15)}
+.opt.wrong-ans{border-color:var(--danger);background:rgba(248,113,113,.12)}
+.opt.disabled{cursor:default;opacity:.85}
+.opt-letter{background:var(--border);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.opt.correct-ans .opt-letter{background:var(--success);color:#0f172a}
+.opt.wrong-ans .opt-letter{background:var(--danger);color:#0f172a}
+.feedback{margin-top:.9rem;padding:.75rem 1rem;border-radius:10px;font-size:.92rem;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:rgba(74,222,128,.12);border:1px solid var(--success);color:#bbf7d0}
+.feedback.wrong{background:rgba(248,113,113,.12);border:1px solid var(--danger);color:#fecaca}
+.exam-bar{position:sticky;top:56px;z-index:90;background:rgba(30,41,59,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.6rem 1.25rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.exam-bar.active{display:flex}
+.timer{font-weight:700;font-size:1.1rem;color:var(--accent)}
+.score-pill{background:var(--card);padding:.3rem .8rem;border-radius:999px;font-size:.9rem}
+.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;border:none;padding:.65rem 1.4rem;border-radius:999px;font-weight:700;cursor:pointer;font-size:.95rem}
+.btn:hover{transform:scale(1.03)}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.results{text-align:center;padding:2.5rem 1rem;display:none}
+.results.show{display:block}
+.results h2{font-size:1.8rem;margin-bottom:.5rem}
+.big-score{font-size:3.5rem;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border)}
+.hidden{display:none!important}
+@media(max-width:600px){.nav-links{width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">📚 HS English Quiz</div>
+  <div class="nav-links">
+    <button class="nav-btn active" data-view="home">Home</button>
+    <button class="nav-btn" data-view="ulysses">Ulysses</button>
+    <button class="nav-btn" data-view="riders">Riders</button>
+    <button class="nav-btn" data-view="casuarina">Casuarina</button>
+    <button class="nav-btn" data-view="exam">Exam Mode</button>
+  </div>
+</nav>
+<div id="examBar" class="exam-bar">
+  <div class="timer" id="timer">⏱ 20:00</div>
+  <div class="score-pill">Score: <span id="liveScore">0</span> / <span id="totalQ">0</span></div>
+  <button class="btn" id="submitExam">Submit Exam</button>
+</div>
+<section id="view-home">
+  <div class="hero">
+    <h1>WBCHSE Class 12 English</h1>
+    <p>Interactive Quiz – Semester 3<br><strong>Ulysses</strong> • <strong>Riders to the Sea</strong> • <strong>Our Casuarina Tree</strong></p>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="showView('ulysses')"><h3>🌊 Ulysses</h3><p>Tennyson – Practice with answers</p></div>
+    <div class="mode-card" onclick="showView('riders')"><h3>⛵ Riders to the Sea</h3><p>Synge – Characters & plot</p></div>
+    <div class="mode-card" onclick="showView('casuarina')"><h3>🌳 Casuarina Tree</h3><p>Toru Dutt – Imagery & symbols</p></div>
+    <div class="mode-card" onclick="startExam()"><h3>📝 Exam Mode</h3><p>Timed test • Score tracking</p></div>
+  </div>
+</section>
+<div class="container">
+  <section id="view-ulysses" class="hidden"><div class="section-title">🌊 Ulysses <span class="badge">Tennyson</span></div><div id="ulysses-qs"></div></section>
+  <section id="view-riders" class="hidden"><div class="section-title">⛵ Riders to the Sea <span class="badge">Synge</span></div><div id="riders-qs"></div></section>
+  <section id="view-casuarina" class="hidden"><div class="section-title">🌳 Our Casuarina Tree <span class="badge">Toru Dutt</span></div><div id="casuarina-qs"></div></section>
+  <section id="view-exam" class="hidden">
+    <div class="section-title">📝 Exam Mode</div>
+    <p style="color:var(--muted);margin-bottom:1rem">Answer all questions. Timer starts when you begin.</p>
+    <div id="exam-qs"></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="btn" id="startExamBtn" onclick="beginExam()">Start Exam (20 min)</button></div>
+  </section>
+  <div id="results" class="results">
+    <h2>Exam Completed!</h2>
+    <div class="big-score" id="finalScore">0%</div>
+    <p id="scoreDetail" style="color:var(--muted);margin:.5rem 0 1.5rem"></p>
+    <button class="btn" onclick="showView('home')">Back to Home</button>
+    <button class="btn btn-outline" style="margin-left:.5rem" onclick="location.reload()">Retry</button>
+  </div>
+</div>
+<footer>Made for WBCHSE Class 12 • Practice + Exam Mode</footer>
+<script>
+const questions={
+ulysses:[
+{q:"What is the speaker in “Ulysses” longing for?",opts:["A peaceful and quiet retirement","New adventures and experiences","The comfort of his family","Forgiveness for past mistakes"],ans:1,exp:"Ulysses yearns for continuous exploration rather than idle kingship."},
+{q:"What phrase best reflects Ulysses’ restless spirit?",opts:["Grow old along with me","Much have I seen and known","I yearn for the old familiar ways","To strive, to seek, to find, and not to yield"],ans:3,exp:"The famous closing line shows his unyielding will."},
+{q:"“I cannot rest from travel: I will drink / Life to the lees” means—",opts:["He wants to retire","He wants to experience life fully till the end","He is tired of travelling","He wants to drink wine"],ans:1,exp:"‘Drink life to the lees’ = live life to the very last drop."},
+{q:"To whom does Ulysses want to leave the sceptre and the isle?",opts:["Penelope","Achilles","Telemachus","His mariners"],ans:2,exp:"He entrusts the kingdom to his capable son Telemachus."},
+{q:"Ulysses describes the people of Ithaca as a—",opts:["civilised race","savage race","heroic race","peaceful race"],ans:1,exp:"He calls them a ‘savage race’ that hoard, sleep and feed."},
+{q:"Ulysses compares himself to a sword that will—",opts:["shine forever","rust unburnish’d if left unused","cut through the sea","be given to Telemachus"],ans:1,exp:"He refuses to rust unused; he wants to remain active."},
+{q:"“I am a part of all that I have met” means—",opts:["He owns everything he saw","His experiences have shaped his identity","He has forgotten his past","He wants to meet more people"],ans:1,exp:"Every experience has contributed to who he is."},
+{q:"Telemachus is described as having—",opts:["adventurous spirit like his father","slow prudence","hatred for ruling","desire to sail with Ulysses"],ans:1,exp:"Ulysses praises his ‘slow prudence’."},
+{q:"Ulysses hopes they may reach the—",opts:["shores of Ithaca","Happy Isles","plains of Troy","city of Athens"],ans:1,exp:"He hopes to touch the Happy Isles and meet Achilles."},
+{q:"The sea in the poem primarily symbolises—",opts:["Fear of death","Barren life of Ithaca","Desire for adventure and the unknown","Telemachus’ duty"],ans:2,exp:"The sea represents the call of the unknown."},
+{q:"Assertion: Telemachus can civilise the rugged people. Reason: ?",opts:["Telemachus is as adventurous as his father","Telemachus has slow prudence","Telemachus has received knowledge from his father","Telemachus is very sharp-minded"],ans:1,exp:"Ulysses praises Telemachus’ ‘slow prudence’."},
+{q:"Assertion: Ulysses is eager to sail on a new journey. Reason: ?",opts:["He wants to meet his wife and son","He wants to go away from his son","He is bored with his life in Ithaca","He does not want to explore new lands"],ans:2,exp:"He finds idle kingship dull."},
+{q:"DIAGRAM: Center = ? Connected: passion for knowledge, love for adventure",opts:["People of Ithaca","Telemachus","Ulysses","Penelope"],ans:2,exp:"These are the defining traits of Ulysses."},
+{q:"DIAGRAM: Center = Ultimate strong will of Ulysses. Surrounding: To strive, To seek, To find, ?",opts:["Not to shine in use","To drink life to the lees","To sail beyond sunset","Not to yield"],ans:3,exp:"The line ends with ‘and not to yield’."},
+{q:"The place to which Telemachus, Ulysses and Penelope are connected is—",opts:["Athens","Ithaca","Troy","Italy"],ans:1,exp:"All three are linked to Ithaca."},
+{q:"Case: “To strive, to seek, to find, and not to yield” — What does he mean?",opts:["He refuses to return to the sea","He regrets not finding solace at home","He refuses to accept defeat and wants to live life to the fullest","He wants a simple life"],ans:2,exp:"Declaration of indomitable will."},
+{q:"Statement (I): Ulysses compares himself to a sword that will “rust unburnish’d”. Statement (II): He urges mariners to sail toward the rising sun.",opts:["Both true","I true, II false","I false, II true","Both false"],ans:1,exp:"I is true; II is false (he sails beyond the sunset)."},
+{q:"Pick the TRUE statement: (IV) Ulysses became tired of his life as an idle king",opts:["(I) never left Ithaca","(II) subjects were civilised","(III) Telemachus was hated","(IV) tired of idle king life"],ans:3,exp:"Only (IV) is true."}
+],
+riders:[
+{q:"In which year was ‘Riders to the Sea’ first staged?",opts:["1902","1904","1903","1910"],ans:1,exp:"First performed in 1904."},
+{q:"How many acts are there in the play?",opts:["4","3","1","2"],ans:2,exp:"One-act play."},
+{q:"Synge’s ‘Riders to the Sea’ is a one-act—",opts:["comedy","tragi-comedy","tragedy","farce"],ans:2,exp:"Tragedy."},
+{q:"The setting of the play is—",opts:["Donegal Islands","Aran Islands","Galway Islands","Connemara Islands"],ans:1,exp:"Aran Islands, west coast of Ireland."},
+{q:"What natural element heavily influences the family’s life?",opts:["Wind","Rain","Sea","Fire"],ans:2,exp:"The sea is both provider and destroyer."},
+{q:"Cathleen is a girl of about—",opts:["twenty-five years","nineteen years","twenty years","twenty-nine years"],ans:2,exp:"About twenty years old."},
+{q:"What is Cathleen doing at the beginning of the play?",opts:["Singing","Sewing","Reading","Kneading cake"],ans:3,exp:"Kneading cake."},
+{q:"Who gave the bundle of clothes to Nora?",opts:["A villager","Bartley","The young priest","Maurya"],ans:2,exp:"The young priest."},
+{q:"The bundle of clothes contained—",opts:["a coat and trousers","a shirt and a plain stocking","a hat and boots","a rosary and a bible"],ans:1,exp:"A shirt and a plain stocking."},
+{q:"Nora and Cathleen assumed Michael died by—",opts:["a gunshot","committing suicide","illness","drowning"],ans:3,exp:"Drowning."},
+{q:"The priest would not stop Bartley because—",opts:["he had faith in Bartley","he had no intention of saving him","he had faith that God is not so cruel to take Maurya’s last son","he didn’t want to get involved"],ans:2,exp:"Faith that God will not take the last son."},
+{q:"Bartley wants the rope for—",opts:["the coffin","a halter","the well","a noose"],ans:1,exp:"A halter for the red mare."},
+{q:"Which animal was chewing on the rope?",opts:["A sheep","A dog","A pig","A cat"],ans:2,exp:"A pig."},
+{q:"The fine white boards were bought from—",opts:["Galway","Dublin","Connemara","Donegal"],ans:2,exp:"Connemara."},
+{q:"They have been looking for Michael’s body for—",opts:["seven days","four days","nine days","ten days"],ans:2,exp:"Nine days."},
+{q:"Who wanted to go to the Galway fair?",opts:["Cathleen","Maurya","Bartley","Nora"],ans:2,exp:"Bartley."},
+{q:"According to Maurya the value of a son cannot be replaced by—",opts:["a hundred or a thousand horses","a herd of cattle","a bag of gold","a chest of treasure"],ans:0,exp:"A hundred or a thousand horses."}
+],
+casuarina:[
+{q:"Who is the author of ‘Our Casuarina Tree’?",opts:["Sarojini Naidu","Kamala Das","Toru Dutt","Rabindranath Tagore"],ans:2,exp:"Toru Dutt."},
+{q:"What is compared to a huge python?",opts:["The trunk of the tree","The creeper","The branches","The garden"],ans:1,exp:"The creeper winds like a huge python."},
+{q:"“Like a huge python…” is an example of—",opts:["Metaphor","Simile","Personification","Alliteration"],ans:1,exp:"Simile."},
+{q:"The trunk of the Casuarina tree is—",opts:["Smooth and tall","Thin and delicate","Rugged with deep scars","Covered with flowers"],ans:2,exp:"Rugged and indented deep with scars."},
+{q:"“Up to its summit near the stars” means—",opts:["The tree is very tall","The tree shines at night","The tree cannot be seen","It needs support"],ans:0,exp:"Emphasises the great height."},
+{q:"The tree wears the creeper like a—",opts:["Scarf","Shawl","Blanket","Rope"],ans:1,exp:"‘The giant wears the scarf’."},
+{q:"What hangs from the branches?",opts:["Fruits","Leaves","Crimson flowers","Monkeys"],ans:2,exp:"Crimson flowers."},
+{q:"The Casuarina tree mainly symbolises—",opts:["Nature’s cruelty","Childhood memories and loved ones","Supernatural power","Political freedom"],ans:1,exp:"Living link to childhood and lost siblings."},
+{q:"The poem is best described as an—",opts:["Sonnet","Ode","Elegy","Dramatic monologue"],ans:1,exp:"An ode."},
+{q:"‘Borrowdale’ refers to—",opts:["A place in India","A valley in England","A lake in Ireland","A city in France"],ans:1,exp:"Valley in the Lake District of England."},
+{q:"The ‘sweet companions’ are—",opts:["Birds and bees","Her siblings (Abju and Aru)","Village children","The grey baboon"],ans:1,exp:"Her brother and sister."},
+{q:"Toru Dutt was sometimes called the—",opts:["Indian Shelley","Indian Keats","Indian Wordsworth","Indian Byron"],ans:1,exp:"Indian Keats."}
+]
+};
+let currentView='home',examMode=false,examStarted=false,timerInterval=null,timeLeft=20*60,userAnswers={};
+function renderQuestions(topic,containerId,isExam=false){
+  const container=document.getElementById(containerId);container.innerHTML='';
+  questions[topic].forEach((item,idx)=>{
+    const qId=`${topic}-${idx}`;
+    const card=document.createElement('div');card.className='q-card';card.id=`card-${qId}`;
+    card.innerHTML=`<div class="q-num">Q${idx+1}</div><div class="q-text">${item.q.replace(/\n/g,'<br>')}</div><div class="options" id="opts-${qId}"></div><div class="feedback" id="fb-${qId}"></div>`;
+    container.appendChild(card);
+    const optsDiv=card.querySelector(`#opts-${qId}`);
+    item.opts.forEach((opt,oIdx)=>{
+      const btn=document.createElement('div');btn.className='opt';
+      btn.innerHTML=`<span class="opt-letter">${String.fromCharCode(65+oIdx)}</span><span>${opt}</span>`;
+      btn.onclick=()=>handleAnswer(topic,idx,oIdx,isExam);optsDiv.appendChild(btn);
+    });
+  });
+}
+function handleAnswer(topic,qIdx,optIdx,isExam){
+  const item=questions[topic][qIdx];const qId=`${topic}-${qIdx}`;
+  const card=document.getElementById(`card-${qId}`);const opts=card.querySelectorAll('.opt');const fb=document.getElementById(`fb-${qId}`);
+  if(isExam){opts.forEach((o,i)=>o.classList.toggle('selected',i===optIdx));userAnswers[qId]=optIdx;updateLiveScore();return;}
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,i)=>{o.classList.add('disabled');if(i===item.ans)o.classList.add('correct-ans');if(i===optIdx&&i!==item.ans)o.classList.add('wrong-ans');if(i===optIdx)o.classList.add('selected');});
+  const correct=optIdx===item.ans;card.classList.add(correct?'correct':'wrong');
+  fb.className=`feedback show ${correct?'correct':'wrong'}`;
+  fb.innerHTML=correct?`✅ Correct! ${item.exp}`:`❌ Wrong. Correct: <strong>${String.fromCharCode(65+item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
+}
+function showView(view){
+  document.querySelectorAll('[id^="view-"]').forEach(el=>el.classList.add('hidden'));
+  document.getElementById('results').classList.remove('show');document.getElementById('examBar').classList.remove('active');
+  examMode=false;examStarted=false;clearInterval(timerInterval);
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`.nav-btn[data-view="${view}"]`);if(btn)btn.classList.add('active');
+  if(view==='home')document.getElementById('view-home').classList.remove('hidden');
+  else if(view==='ulysses'){document.getElementById('view-ulysses').classList.remove('hidden');renderQuestions('ulysses','ulysses-qs',false);}
+  else if(view==='riders'){document.getElementById('view-riders').classList.remove('hidden');renderQuestions('riders','riders-qs',false);}
+  else if(view==='casuarina'){document.getElementById('view-casuarina').classList.remove('hidden');renderQuestions('casuarina','casuarina-qs',false);}
+  else if(view==='exam'){document.getElementById('view-exam').classList.remove('hidden');document.getElementById('exam-qs').innerHTML='';document.getElementById('startExamBtn').style.display='inline-block';}
+  currentView=view;window.scrollTo(0,0);
+}
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
+function startExam(){showView('exam');}
+function beginExam(){
+  examMode=true;examStarted=true;userAnswers={};timeLeft=20*60;
+  document.getElementById('startExamBtn').style.display='none';document.getElementById('examBar').classList.add('active');document.getElementById('results').classList.remove('show');
+  const examContainer=document.getElementById('exam-qs');examContainer.innerHTML='';let total=0;
+  ['ulysses','riders','casuarina'].forEach(topic=>{
+    const section=document.createElement('div');
+    section.innerHTML=`<div class="section-title" style="font-size:1.15rem;margin-top:1.5rem">${topic==='ulysses'?'🌊 Ulysses':topic==='riders'?'⛵ Riders to the Sea':'🌳 Our Casuarina Tree'}</div>`;
+    examContainer.appendChild(section);const sub=document.createElement('div');sub.id=`exam-${topic}`;examContainer.appendChild(sub);
+    renderQuestions(topic,`exam-${topic}`,true);total+=questions[topic].length;
+  });
+  document.getElementById('totalQ').textContent=total;document.getElementById('liveScore').textContent='0';
+  updateTimerDisplay();timerInterval=setInterval(tick,1000);
+}
+function tick(){timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timerInterval);submitExam();}}
+function updateTimerDisplay(){const m=Math.floor(timeLeft/60).toString().padStart(2,'0');const s=(timeLeft%60).toString().padStart(2,'0');document.getElementById('timer').textContent=`⏱ ${m}:${s}`;}
+function updateLiveScore(){let correct=0;Object.keys(userAnswers).forEach(qId=>{const[topic,idx]=qId.split('-');if(userAnswers[qId]===questions[topic][parseInt(idx)].ans)correct++;});document.getElementById('liveScore').textContent=correct;}
+document.getElementById('submitExam').onclick=submitExam;
+function submitExam(){
+  clearInterval(timerInterval);examStarted=false;document.getElementById('examBar').classList.remove('active');
+  let total=0,correct=0;
+  ['ulysses','riders','casuarina'].forEach(topic=>{
+    questions[topic].forEach((item,idx)=>{
+      total++;const qId=`${topic}-${idx}`;const selected=userAnswers[qId];
+      const card=document.getElementById(`card-${qId}`);const opts=card.querySelectorAll('.opt');
+      opts.forEach((o,i)=>{o.classList.add('disabled');if(i===item.ans)o.classList.add('correct-ans');if(selected===i&&i!==item.ans)o.classList.add('wrong-ans');});
+      if(selected===item.ans){correct++;card.classList.add('correct');}else card.classList.add('wrong');
+      const fb=document.getElementById(`fb-${qId}`);
+      fb.className=`feedback show ${selected===item.ans?'correct':'wrong'}`;
+      fb.innerHTML=selected===item.ans?`✅ Correct! ${item.exp}`:`❌ ${selected===undefined?'Not answered.':'Wrong.'} Correct: <strong>${String.fromCharCode(65+item.ans)}. ${item.opts[item.ans]}</strong><br>${item.exp}`;
+    });
+  });
+  const pct=Math.round((correct/total)*100);
+  document.getElementById('finalScore').textContent=pct+'%';
+  document.getElementById('scoreDetail').textContent=`You scored ${correct} out of ${total}`;
+  document.getElementById('results').classList.add('show');document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+showView('home');
+</script>
+</body>
+</html>
